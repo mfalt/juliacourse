@@ -57,7 +57,7 @@
 # sqrt, -, <
 
 # Lastly, if you have problems that the qr or cholesky functions fail in
-# promoting properly, try to define the function to make sure it is not trying
+# promoting properly, try to define the function below to make sure julia is not trying
 # to put a TrackingFloat inside another TrackingFloat, i.e.
 # TrackingFloat(v::TrackingFloat) = v
 
