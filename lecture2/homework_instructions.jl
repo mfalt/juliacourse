@@ -34,7 +34,7 @@
 # Define constructor that works as:
 # TrackingFloat(1.0), generating TrackingFloat(1.0, 0.0)
 
-# Define simple getters `getval` and `getmax` that gets the corresponding fileds.
+# Define simple getters `value` and `getmax` that gets the corresponding fileds.
 
 # Note:
 # Don't forget to `import Base: +, *, -, /`
@@ -81,8 +81,8 @@ bt = TrackingFloat.(b)
 # Try some operations
 v = A*b
 vt = At*bt
-# Did we calculate correctly? Using getval to convert back to float
-maximum(abs, v - getval.(vt))
+# Did we calculate correctly? Using value to convert back to float
+@test maximum(abs, v - value.(vt)) < sqrt(eps())
 
 # Get the max fields using our function getmax
 getmax.(vt)
@@ -102,13 +102,13 @@ AAt = TrackingFloat.(AA)
 
 sol1 = AAt\bt # Uses qr
 # Did we get the correct answer?
-maximum(abs, getval.(sol1) - AA\b)
+@test maximum(abs, value.(sol1) - AA\b) < sqrt(eps())
 
 # Try cholesky factorization
 F = cholesky(AAt)
 
 sol2 = F\bt
-maximum(abs, getval.(sol2) - AA\b)
+@test maximum(abs, value.(sol2) - AA\b) < sqrt(eps())
 
 # Which method was able to work with smallest elements?
 maximum(getmax.(sol1))
