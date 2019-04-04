@@ -1,4 +1,4 @@
-using Random
+using Random, Statistics
 Random.seed!(0)
 
 function pf( y, N, g, f, σw )
