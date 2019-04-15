@@ -1,0 +1,13 @@
+# Optimization and Learning
+- Automatic differentiation
+  - ForwardDiff.jl
+  - ReverseDiff.jl
+  - TaylorSeries.jl
+  - Zygote.jl
+  - Flux.Tracker
+- JuMP.jl: Modeling language for all kinds of optimization problems.
+- Optim.jl: Native julia solvers, supports AD
+- ProximalOperators.jl:
+- Convex.jl: Modeling language for convex optimization problems.
+- Flux.jl: Native Julia Deep learning
+- TensorFlow.jl: What you would expect
