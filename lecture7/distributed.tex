@@ -1,0 +1,517 @@
+\documentclass{beamer}
+\usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+% \usepackage{newtxtext,newtxmath,inconsolata}
+
+%\usepackage{schoolbook}
+\usepackage{amssymb,amsmath}
+% \usepackage{unicode-math}
+\usepackage{fontspec}\setmonofont{DejaVu Sans Mono}[Scale=0.75]
+\usepackage{fourier}\usepackage[scale=0.85]{tgheros}\linespread{0.95}
+
+\usepackage{pgfplots}
+
+
+\usepackage{microtype}
+\usepackage{hyperref}
+% \hypersetup{
+% pdfauthor={Fredrik Bagge Carlson},
+% colorlinks=true,
+% linkcolor=blue!40!black,
+% citecolor=black,
+% urlcolor=blue!40!black,
+% }
+%\usepackage[maxnames=3, minnames=2, maxcitenames=2,
+%style=authoryear]{biblatex}
+\usepackage[capitalise]{cleveref}
+\usepackage{graphicx,subcaption}
+\crefname{section}{Sec.}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+
+
+\newcommand{\T}{^{\hspace{-0.1mm}\scriptscriptstyle \mathsf{T}}\hspace{-0.2mm}}
+\newcommand{\iT}{^{\scriptscriptstyle -\mathsf{T}}\hspace{-0.6mm}}
+\newcommand{\inspace}[1]{\in \mathbb{R}^{#1}}
+
+\newcommand{\norm}[1]{\begin{Vmatrix}#1\end{Vmatrix}}
+\newcommand{\normf}[1]{\begin{Vmatrix}#1\end{Vmatrix}_F}
+\newcommand{\normt}[1]{\begin{Vmatrix}#1\end{Vmatrix}_2}
+
+\newcommand{\mean}[1]{\mu\left\{#1\right\}}
+\newcommand{\var}[1]{\mathbb{V}\left\{#1\right\}}
+\newcommand{\Exp}[1]{\mathbb{E}\left\{#1\right\}}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\minimize}[1]{\underset{#1}{\text{minimize} }}
+\newcommand{\subjto}{\text{subject to }}
+
+\newcommand{\cmt}[1]{{\color{red}{Comment: #1}}}
+
+\usepackage{algorithm}
+\usepackage[outputdir=build]{minted} \usemintedstyle{atomone}% Obs! Install latest version of minted for breaklines and outputdir to work
+\setminted[julia1]{breaklines, numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm}
+\setminted[jlcon1]{breaklines, numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm}
+
+
+
+
+% \newsubfloat{figure}% Allow subfloats in figure environment
+\begin{document}
+\newlength\figureheight
+\newlength\figurewidth
+\setlength{\figurewidth}{0.4\textwidth}
+\setlength{\figureheight }{4cm }
+
+% \begin{titleframe}
+\title{Parallel computing in Julia}
+\author{Fredrik Bagge Carlson\\ \texttt{fredrikb@control.lth.se}}
+% \end{titleframe}
+
+\maketitle
+%====================================================================
+%====================================================================
+\begin{frame}{}{}
+
+	This document outlines how to setup and run computations in parallel using Julia on a collection of remote computers, such as computers in a university lab. After the environment has been setup, only minor modifications to serially executed code is necessary to enable parallel execution.
+
+	Written for Julia version 1.0
+
+\end{frame}
+
+%====================================================================
+%====================================================================
+\begin{frame}{Introduction}
+
+	Julia is a modern programming language designed with high-performance numerical computing in mind. As such, it has stellar support for \href{https://docs.julialang.org/en/v1/manual/parallel-computing/}{distributed computing}.
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}{Introduction}{}
+	\begin{itemize}
+		\item Multi-core -- Multiple workers
+		\item Multi-thread -- Multiple threads on same worker, shared memory.
+	\end{itemize}
+
+	Multi-core vs. multi-thread
+	\begin{itemize}
+		\item[+] automatic thread safety
+		\item[+] making use of the processing power of multiple different machines
+		\item[-] communication and memory overhead
+	\end{itemize}
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}{Distributed}{}
+	How to think about a worker?
+
+	\begin{itemize}
+		\item A worker is a separate instance of Julia.
+		\item Each worker has it's own memory.
+		\item Each worker only knows things defined explicitly in its julia session.
+	\end{itemize}
+\end{frame}
+
+%====================================================================
+%====================================================================
+\begin{frame}{Workers}{}
+	\begin{itemize}
+		\item Julia's distributed computing functionality lives in the standard library \href{https://docs.julialang.org/en/v1/stdlib/Distributed/}{\texttt{Distributed}}
+		\item To start a additional workers, one can either start Julia with the command-line flag \texttt{-p}, or call the function \texttt{addprocs} at runtime.
+		\begin{itemize}
+			\item Local machine
+			\item Remote machines (e.g., lab computers, cloud)
+		\end{itemize}
+		\item The machine that starts workers is the \emph{host}.
+	\end{itemize}
+
+\end{frame}
+%====================================================================
+%====================================================================
+\begin{frame}{Code availability}{}
+	Computations can be assigned to any available worker by the host, provided that all required code is loaded at the assigned worker.
+	\begin{itemize}
+		\item A statement like \texttt{using Package} loads code on the host, but not on any workers.
+		\item \texttt{@everywhere using Package} loads package on all workers.
+		\item Only workers started while \texttt{@everywhere} was called will load the code.
+	\end{itemize}
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Environment setup}{}
+	In order to perform distributed computing on remote machines, the environment has to be setup on each machine. If you intend to run on your local machine only, you can skip this.
+	\begin{enumerate}
+		\item Verify that all computers have the same Julia version installed. Julia will be launched from the same path as on the host computer (can be overridden with \texttt{exename} arg. to \texttt{addprocs}).
+		\item Ensure password-less ssh (\href{http://www.linuxproblem.org/art_9.html}{instructions}).
+		\item To install all required packages on the remote machines, it's recommended to create a \texttt{Project.toml} file:
+		\begin{minted}[framesep=2mm]{julia}
+cd("myproject") # Navigate Julia to the directory containing your code files. This can be done either before starting Julia or inside julia like this
+using Pkg
+pkg"activate ." # Set the current directory as the active Julia environment
+pkg"add LinearAlgebra Statistics DSP" # Add required packages, these are just examples
+		\end{minted}
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Environment setup}{}
+
+	\begin{enumerate}
+
+		\item Initiate workers by running (the example starts 4 workers on each of the computers philon-02 to philon-12)
+		\begin{minted}{julia}
+addprocs([(@sprintf("philon-%2.2d",i),4) for i in 2:12], topology=:master_worker)
+		\end{minted}
+		\verb+master_worker+ topology is recommended unless the workers have to communicate with each other.
+		\item The required packages are installed on remote machines by instantiating the project:
+		\begin{minted}[breaklines, fontsize=\small, framesep=2mm]{julia}
+using Distributed
+addprocs(["heron-01"]) # Start one worker on the remote heron-01
+1-element Array{Int64,1}:
+2
+@everywhere using Pkg
+@everywhere pkg"activate ."  # Activate current dir (myproject)
+@everywhere pkg"instantiate" # This installs required packages
+Updating registry at `~/.julia/registries/General`
+Updating git-repo `git://github.com/JuliaRegistries/General.git`
+Fetching:  From worker 2: Updating registry at `~/.julia/registries/General`
+From worker 2: Updating git-repo `https://github.com/JuliaRegistries/General.git`
+\end{minted}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Environment setup}{}
+\begin{minted}{julia}
+@everywhere pkg"precompile"
+Precompiling project...
+From worker 2:	Precompiling project...
+		\end{minted}
+		This only works if every worker can find \texttt{myproject}, i.e., the path exists and is accessible on every machine. The default path of the workers can be specified with the \texttt{dir} arg. to \texttt{addprocs}, the default is the current path of the host.
+
+\end{frame}
+
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Loading code on remote machines}{}
+
+Only code loaded on a worker can be run by that worker. Code is loaded on a worker by the macro \verb+@everywhere+, e.g.:
+\begin{minted}{julia}
+@everywhere a = 2 # a is now = 2 on all loaded workers
+
+@everywhere include("setup_computations.jl") # The files is included on all workers, note that the file must be available on every computer
+
+@everywhere function myfun(a)
+    a + 1
+end # The function myfun is defined on all workers
+
+@everywhere begin
+    some_function_call()
+    some_variable = something
+end # All code in the block is run on all workers
+\end{minted}
+If you start new workers after having run something \texttt{@everywhere}, you need to rerun that code on the new workers.
+
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Loading code on remote machines}
+If you need to include a file that is not available at the remote machine, such as a file located in your home directory not being available from the cloud computers, use the following include function
+\begin{minted}{julia}
+function include_remote(path, workers=workers(); mod=Main)
+  open(path) do f
+    text, s = read(f, String), 1
+    while s <= length(text)
+      ex, s = Meta.parse(text, s) # Parse text starting at pos s, return new s
+      for w in workers
+        @spawnat w Core.eval(mod, ex) # Evaluate the expression on workers
+      end
+    end
+  end
+end
+\end{minted}
+This function reads the code into the variable \texttt{text} and performs an \texttt{eval} on the remote workers.
+\end{frame}
+
+
+\begin{frame}[fragile]{Performing calculations on remote machines}
+One particular pattern that is suitable for parallel processing is Monte-Carlo simulations and calculations. A pattern like this is useful:
+\begin{minted}[numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm]{julia}
+@everywhere include("setup_computations.jl")
+all_results = pmap(1:number_of_montecarlo_runs) do index
+    result = perform_computation(index)
+end
+\end{minted}
+\verb+pmap+ is a parallel map operation.
+
+The variable \verb+all_results+ will be a vector of length \verb+number_of_montecarlo_runs+ containing the results of the individual runs of the map body.
+\end{frame}
+
+\begin{frame}[fragile]{Performing calculations on remote machines}
+If the computations are not suitable to launch from a loop, one can launch computations on a remote worker with
+\begin{minted}[breaklines,numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm]{julia}
+f1 = @spawn run_some_computation() # Run computation on automatically chosen worker
+f2 = @spawnat 3 run_some_other_computation() # Run computation on worker 3
+\end{minted}
+\verb+f1+ and \verb+f2+ are of type \href{https://docs.julialang.org/en/v1/manual/parallel-computing/index.html#Multi-Core-or-Distributed-Processing-1}{\texttt{Future}}, and the results must be fetched before used
+\begin{minted}[breaklines,numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm]{julia}
+result1 = fetch(f1) # This call blocks until computation of f1 is done
+result2 = fetch(f2)
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Performing calculations on remote machines}
+Another useful pattern for launching computations, if one is not comfortable with the map operation, is the following:
+\begin{minted}[breaklines,numbersep=3pt, frame=none, fontsize=\small, framesep=3mm]{julia}
+futures = Vector{Future}(num_iterations) # vector to hold Futures
+for iteration = 1:num_iterations
+    f = @spawn perform_computation(iteration)
+    futures[iteration] = f
+end
+results = fetch.(futures)
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Performing calculations on remote machines}
+For-loops can also be distributed with the macro \texttt{@distributed}, that accepts an optional reduction function, e.g.:
+\begin{minted}[fontsize=\footnotesize]{julia}
+julia> @distributed vcat for i = 1:5
+    myid() # Returns the id of the worker
+end
+5-element Array{Int64,1}:
+2
+2
+3
+4
+5
+
+julia> @distributed hcat for i = 1:5
+    myid()
+end
+1×5 Array{Int64,2}:
+2  2  3  4  5
+
+julia> @distributed (+) for i = 1:5
+    myid()
+end
+16
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Performing calculations on remote machines}
+Distributed for-loops are to be preferred when the calculation involves reduction of many small results (like summing up numbers), whereas parallel maps are to be preferred when a vector of large results is desired:
+\begin{minted}{julia}
+# Creating a result vector
+@time a = @sync @distributed vcat for i = 1:10
+    zeros(1000,1000)
+end;
+2.350288 seconds (198.40 k allocations: 161.418 MiB, 5.28% gc time)
+
+# Creating a result vector (the preferred way)
+@time b = pmap(1:10) do i
+    zeros(1000,1000)
+end;
+0.882909 seconds (220.28 k allocations: 86.244 MiB, 9.48% gc time)
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Performing calculations on remote machines}
+\begin{minted}{julia}
+@time sum(pmap(1:10000) do i # Reducing with +
+    myid()
+end)
+0.543199 seconds (856.46 k allocations: 34.684 MiB, 2.39% gc time)
+
+# Reducing with + (the preferred way)
+@time a = @sync @distributed (+) for i = 1:10000
+    myid()
+end;
+0.054469 seconds (52.08 k allocations: 2.533 MiB)
+\end{minted}
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Error handling}{}
+    Any error stops pmap from processing the remainder of the collection. To override this behavior you can specify an error handling function via argument \verb+on_error+
+\begin{minted}{julia}
+ julia> pmap(x->iseven(x) ? error("foo") : x, 1:4; on_error=ex->0)
+ 4-element Array{Int64,1}:
+  1
+  0
+  3
+  0
+\end{minted}
+ Errors can also be handled by retrying failed computations. Keyword arguments \verb+retry_delays+ and \verb+retry_check+.
+\end{frame}
+
+
+\begin{frame}{Getting results back}
+
+If you launch Julia from a remote computer, but want to analyze the results of the parallel computations on, e.g., your office computer, then
+\begin{enumerate}
+	\item Place your script file in a mounted location, e.g., \texttt{/work/\$USER} or \texttt{/home/\$USER}. For simplicity, navigate to this folder on both local and remote machine before starting Julia.
+	\item Run \texttt{open(file->serialize(file, results), "res.bin","w")} to save the results to a binary file called \texttt{res.bin}.
+	\item On your office computer, run \texttt{results = open(deserialize, "res.bin")} to load the results.
+    \item If the office computer and the remote computers are running different Julia versions, loading of the file might not work, in that case, use a package like \href{https://github.com/JuliaIO/JLD.jl}{JLD.jl} or \href{https://github.com/MikeInnes/BSON.jl}{BSON.jl (recommended)} to save and load the results instead.
+\end{enumerate}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Miscellaneous}
+\begin{description}
+	\item[How to figure out which packages to install on remote computers] All the packages that you are calling \texttt{using PackageName} on.
+	\item[How many workers to launch] The optimal is typically to utilize all \emph{physical} cores on each machine. Some operations, like matrix operations etc., automatically run in parallel. If you are running in a lab full of students...
+	\item[Order of computations] If the computations you run have vastly different runtimes, try to launch the longest running computations first, e.g.:
+	\begin{minted}[breaklines,numbersep=3pt, gobble=0, fontsize=\small, framesep=1mm, frame=none]{julia}
+pmap(10:-1:1) do i
+       sleep(i)
+end
+	\end{minted}
+	will finish faster than
+	\begin{minted}[breaklines,numbersep=3pt, gobble=0, fontsize=\small, framesep=1mm, frame=none]{julia}
+pmap(1:10) do i
+       sleep(i)
+end
+	\end{minted}
+\end{description}
+\end{frame}
+
+
+\begin{frame}[fragile]{Miscellaneous}
+    \begin{description}
+	\item[Host machine workers] You can launch workers on the host machine as well with the command \texttt{addprocs(4)}. Be sure to do this \emph{after} adding the remote workers if you want to use both.
+	\item[Startup script] Workers do not run a \texttt{startup.jl} script, nor do they synchronize their global state (such as global variables, new method definitions, and loaded modules) with any of the other running processes.
+	\item[Non-Julia dependencies] These can be a bit tricky to handle. I would ask the system administrator to help out.
+	\item[Sending data between workers] \href{https://github.com/ChrisRackauckas/ParallelDataTransfer.jl}{ParallelDataTransfer.jl} is useful. It allows you to send variables between workers.
+	\item[The result of a parallel computation] The result of, e.g., a \texttt{pmap} statement is automatically sent from the worker to the host. If this result is large, this communication can become a bottleneck, e.g.:
+	\begin{minted}{julia}
+	julia> sizeof(zeros(10_000,1_000)) ÷ 1e6
+	80.0 # Mb
+	\end{minted}
+
+\end{description}
+
+\end{frame}
+
+
+\begin{frame}{Troubleshooting}
+\begin{description}
+	\item[WARNING:] \textbf{Node state is inconsistent: node failed to load cache from /var/tmp/username/lib/*.ji.} If you get this message, it might be due to the host computer and the remote computer running different versions of LLVM.
+	\item[WARNING:] \textbf{can only precompile from node 1} First time you call \texttt{using Package} must be on the host only, i.e., not inside an \texttt{@everywhere} statement.
+\end{description}
+
+\end{frame}
+
+
+\begin{frame}{Documentation}
+\begin{itemize}
+	\item \href{https://docs.julialang.org/en/v1/}{Julia manual}
+	\item \href{https://docs.julialang.org/en/v1/manual/parallel-computing/}{Julia parallel computing manual}
+	\item \href{https://docs.julialang.org/en/v1/stdlib/Distributed/}{Standard Library (Distributed)}
+\end{itemize}
+
+
+\end{frame}
+
+
+
+%====================================================================
+%====================================================================
+\begin{frame}{Multi threading}{}
+    \texttt{Base.Threads}
+    \begin{itemize}
+        \item[+] Threads have significantly lower overhead compared to workers.
+        \item[-] You need to worry about thread safety (you really do).
+    \end{itemize}
+\end{frame}
+
+%====================================================================
+%====================================================================
+\begin{frame}{Not thread safe by default}{}
+    \begin{itemize}
+        \item IO (e.g., \texttt{println})
+        \item Random
+        \item Regex
+    \end{itemize}
+\end{frame}
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{How to thread}{}
+    Set environment variable \texttt{JULIA\_NUM\_THREADS}, e.g., by placing \texttt{export JULIA\_NUM\_THREADS=4} in \texttt{.bashrc} (Atom defaults to number of cores in your machine).
+
+    \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, frame=lines, fontsize=\small, framesep=2mm]{julia}
+    Threads.@threads for i = 1:N
+        do_work(i)
+    end
+    \end{minted}
+
+    \begin{itemize}
+        \item Loop iterations must be independent
+    \end{itemize}
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Threaded random number generation}{}
+Each thread must have it's own random number generator.
+    \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, frame=lines, fontsize=\small, framesep=2mm]{julia}
+r = [MersenneTwister(1) for _ in 1:Threads.nthreads()]
+function foo(r)
+   a = zeros(1000)
+   @threads for i in 1:1000
+      rng = r[threadid()]
+      a[i] = rand(rng)
+   end
+end
+    \end{minted}
+    The same goes for regex.
+\end{frame}
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Mutable arguments}{}
+    Be wary of calling functions that modify their input arguments! Use separate workspaces for each thread.
+\begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, frame=lines, fontsize=\small, framesep=2mm]{julia}
+struct Workspace{T}
+    xh::Vector{T}
+    x::Vector{T}
+    y::Vector{T}
+    w::Vector{T}
+    we::Vector{T}
+    bins::Vector{T}
+    xp::Vector{T}
+end
+
+workspaces = ntuple(i->Workspace(), 4) # Works if you provide argument-free constructor
+RAN = ntuple(MersenneTwister, 4))
+
+ws  = workspaces[threadid()]
+rng = RAN[threadid()]
+xh  = pf!(rng, ws, N, g, f, σw0)
+\end{minted}
+
+\end{frame}
+
+
+
+
+
+\end{document}
