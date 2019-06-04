@@ -1,0 +1,249 @@
+\DeclareOption{lionbackground}{\def\@beamer@option{%
+\AtBeginDocument {%
+  \pgfdeclareimage[width=70mm]{lionwhite}{LionSealWhite}
+}%
+
+\usebackgroundtemplate{{%
+  \color{palegray}\vrule height\paperheight width\paperwidth
+  \kern -\paperwidth
+  \vbox to \paperheight{%
+    \vss\kern2mm\hbox to \paperwidth{\hss\pgfuseimage{lionwhite}\hss}\vss}%
+  }%
+}
+
+\useframetitletemplate{\par\kern-1mm
+    \vbox to 10mm{\leavevmode\kern-\beamer@leftmargin
+      \colorbox{header}{\hbox to \paperwidth{\hss
+         \color{white}
+          \Large\bfseries\vrule height 7mm
+      depth 3mm width0mm\insertframetitle\strut\hss}}\kern -30mm\par\vss}%
+}%
+
+\useinnertheme[shadow=true]{rounded}
+\setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg}
+
+\usefoottemplate{%
+  \vbox{\tiny%
+  \hbox{%
+  \setbox\beamer@linebox=\hbox to\paperwidth{%
+    \hbox to.5\paperwidth{\tiny\color{white}\frame@numbers\hfill\textbf{\insertshortauthor}\hskip.3cm}%
+    \hbox to.5\paperwidth{\hskip.3cm\tiny\color{white}\textbf{\insertshorttitle}\hfill}\hfill}%
+  \ht\beamer@linebox=2.625ex%
+  \dp\beamer@linebox=0pt%
+  \setbox\beamer@linebox=\vbox{\box\beamer@linebox\vskip1.125ex}%
+  \color{header}\hskip-\Gm@lmargin\vrule width.5\paperwidth
+  height\ht\beamer@linebox\color{structure}\vrule width.5\paperwidth
+  height\ht\beamer@linebox\hskip-\paperwidth%
+  \hbox{\box\beamer@linebox\hfill}\hfill\hskip-\Gm@rmargin}}}
+
+\setbeamercovered{transparent}
+
+}} % end \DeclareOption{lionbackground}
+
+\DeclareOption{liontopcorner}{\def\@beamer@option{%
+\pgfdeclareimage[width=14mm]{lionsealwhitesmall}{LionSealWhite}
+\useframetitletemplate{\par\kern-1mm
+  \vbox to 10mm{\leavevmode\kern-\beamer@leftmargin
+       \colorbox{header}{\hbox to \paperwidth{\hss
+         \color{white}
+         \Large\bfseries\vrule height 7mm  depth 3mm width0mm\relax
+         \insertframetitle\strut\hss}}\kern -30mm\par\vss}%
+     \vbox to 0pt{\kern-18mm\hbox to 0pt{\kern-12mm\relax
+              \pgfuseimage{lionsealwhitesmall}\hss}\vss}
+}%
+\useinnertheme[shadow=true]{rounded}
+\setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg}
+
+\usefoottemplate{%
+  \vbox{\tiny%
+  \hbox{%
+  \setbox\beamer@linebox=\hbox to\paperwidth{%
+    \hbox to.5\paperwidth{\tiny\color{white}\frame@numbers
+          \hfill\textbf{\insertshortauthor}\hskip.3cm}%
+    \hbox to.5\paperwidth{\hskip.3cm\tiny\color{white}%
+          \textbf{\insertshorttitle}\hfill}\hfill}%
+  \ht\beamer@linebox=2.625ex%
+  \dp\beamer@linebox=0pt%
+  \setbox\beamer@linebox=\vbox{\box\beamer@linebox\vskip1.125ex}%
+  \color{header}\hskip-\Gm@lmargin\vrule width.5\paperwidth
+  height\ht\beamer@linebox\color{structure}\vrule width.5\paperwidth
+  height\ht\beamer@linebox\hskip-\paperwidth%
+  \hbox{\box\beamer@linebox\hfill}\hfill\hskip-\Gm@rmargin}}}
+
+\setbeamercovered{transparent}
+
+}} % end \DeclareOption{liontopcorner}
+
+\DeclareOption{lionheader}{\def\@beamer@option{%
+
+  \useinnertheme[shadow=true]{rounded}
+  \setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg}
+  \pgfdeclareimage[width=14mm]{lionsealbronzewhite}{LionSealBronzeWhite}
+  \useframetitletemplate{%
+    \vskip 2mm
+    {\leftskip15mm%
+    \rightskip-\beamer@rightmargin plus1fill\relax
+    \advance\rightskip by0.3cm\leavevmode
+    \color{black}\Large\bfseries\insertframetitle\par \small\insertframesubtitle\vspace{-3mm}\par}
+  \vbox to 2mm{\leavevmode\kern-\beamer@leftmargin \fboxsep=0.7mm\colorbox{header}{\hbox to \paperwidth{\hss}}\vss}
+  \moveleft 3mm \vbox to 0pt{\kern-20mm\pgfuseimage{lionsealbronzewhite}\vss}
+  \vskip -7mm
+}
+
+\usefoottemplate{%
+  \vbox to 3mm{\hbox to \textwidth{\tiny
+      \hbox to 0pt{\kern -10mm\frame@numbers\hss}
+        \insertshortauthor: \insertshorttitle\hfill}\vss}}
+
+\setbeamercovered{transparent}
+}} %end \DeclareOption{lionheader}
+
+
+\DeclareOption{lionheaderLCCC}{\def\@beamer@option{%
+
+  \useinnertheme[shadow=true]{rounded}
+  \setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg}
+  \pgfdeclareimage[width=14mm]{lionsealbronzewhite}{LionSealBronzeWhite}
+  \pgfdeclareimage[width=9mm]{logo-lccc}{logo-lccc}
+  \useframetitletemplate{%
+    \vskip 2mm
+    {\leftskip15mm%
+    \rightskip-\beamer@rightmargin plus1fill\relax
+    \advance\rightskip by0.3cm\leavevmode
+    \color{black}\Large\bfseries\insertframetitle\par}
+  \vbox to 2mm{\leavevmode\kern-\beamer@leftmargin \fboxsep=0.7mm\colorbox{header}{\hbox to \paperwidth{\hss}}\vss}
+  \moveleft 5mm \vbox to 0pt{\kern-20mm\pgfuseimage{lionsealbronzewhite}\vss}
+  \moveright 105mm\vbox to 0pt{\kern-25mm\pgfuseimage{logo-lccc}\vss}
+  \vskip -7mm
+}
+
+\usefoottemplate{%
+  \vbox to 3mm{\hbox to \textwidth{\tiny
+      \hbox to 0pt{\kern -10mm\frame@numbers\hss}
+        \insertshortauthor: \insertshorttitle\hfill}\vss}}
+
+\setbeamercovered{transparent}
+}} %end \DeclareOption{lionheaderLCCC}
+
+\DeclareOption{lionheaderLCCCold}{\def\@beamer@option{%
+\newsavebox\lionheadbox
+\AtBeginDocument {%
+  \pgfdeclareimage[width=116mm]{blueline}{blueline}
+  \pgfdeclareimage[width=14mm]{lionbronzejpg}{lionbronzejpg}
+  \pgfdeclareimage[width=10mm]{logo-lccc}{logo-lccc}
+  \sbox{\lionheadbox}{\vbox to 0pt{\vss \parskip=0pt\noindent
+    \pgfuseimage{lionbronzejpg}\par
+    \kern -5.3mm
+    \hbox to \textwidth{\hss\pgfuseimage{blueline}\hss}
+    \kern -13mm
+    \hbox{\kern 96mm\pgfuseimage{logo-lccc}}
+  }%
+  }%
+}
+
+\useinnertheme[shadow=true]{rounded}
+\setbeamercolor{block title}{use=structure,fg=white,bg=structure.fg}
+
+\useframetitletemplate{%
+  \vskip 5mm
+  {\leftskip17mm%
+    \rightskip-\beamer@rightmargin plus1fill\relax
+    \advance\rightskip by0.3cm\leavevmode
+   \color{black}\Large\bfseries\insertframetitle\par
+  }\usebox{\lionheadbox}\par}
+
+\usefoottemplate{%
+  \vbox to 3mm{\hbox to \textwidth{\tiny
+      \hbox to 0pt{\kern -10mm\frame@numbers\hss}
+        \insertshortauthor: \insertshorttitle\hfill}\vss}}
+
+\setbeamercovered{transparent}
+}} %end \DeclareOption{lionheaderLCCCold}
+
+
+\DeclareOption{lioncorner}{\def\@beamer@option{%
+\newsavebox\lioncornerbox
+\AtBeginDocument {%
+  \pgfdeclareimage[width=30mm]{lionbronze}{LionSealBronze}
+  \sbox{\lioncornerbox}{\vbox to 0pt{\vskip3mm\hbox to \textwidth{%
+        \hskip2mm\pgfuseimage{lionbronze}\hss}%
+  \vss}%
+  }%
+}
+
+\useframetitletemplate{%
+\vbox to 0pt{%
+  \kern68mm\hbox to 0pt{\kern93mm\pgfuseimage{lionbronze}%
+    \hss}\vss}
+  \kern-2mm
+  {\leftskip\z@ plus1fill \rightskip\z@ plus1fill
+    \color{LUblue}\Large\bfseries\insertframetitle\par}
+  {\color{bronze}\medskip\hrule height 2pt \vspace{1mm}}}
+
+\usefoottemplate{%
+  \vbox to 3mm{\hbox to \textwidth{\tiny
+      \hbox to 0pt{\kern -10mm\frame@numbers\hss}
+        \insertshortauthor: \insertshorttitle\hfill}\vss}}
+
+}} %end \DeclareOption{lioncorner}
+
+\DeclareOption{handout}{\def\@beamer@option{%
+\useframetitletemplate{\par\kern-1mm
+    \vbox to 10mm{\leavevmode\kern-\beamer@leftmargin
+      \colorbox{white}{\hbox to \paperwidth{\hss
+         \color{header}
+          \Large\bfseries\vrule height 7mm
+          depth 2mm width0mm\insertframetitle\strut\hss}}\kern
+      -30mm\par
+      \color{structure}\hrule height 1mm\vss}%
+}%
+%
+}} %end \DeclareOption{handout}
+
+\def\@beamer@option{\PackageError{'Regler'}{No theme variant specified}{}}
+
+\DeclareOption{framenumbers}{\def\frame@numbers{%
+    \quad\insertframenumber/\inserttotalframenumber}}
+\let\frame@numbers=\relax
+
+\ProcessOptions
+\usepackage{lmodern}
+\usepackage[scaled=0.9]{helvet}
+\usepackage{amsmath}
+\newenvironment{gmatrix}{\left\lgroup\begin{matrix}}{\end{matrix}\right\rgroup}
+% \usefonttheme{professionalfonts}
+% \usefonttheme[onlymath]{serif}
+
+\definecolor{bronze}{rgb}{0.61,0.38,0.08}
+\definecolor{palegray}{rgb}{0.97,0.95,0.95}
+\definecolor{header}{rgb}{0,0,0.5}
+\definecolor{LUblue}{rgb}{0,0,0.5}
+
+\setbeamercolor{structure}{fg=bronze}
+
+\parskip=\medskipamount
+\userightsidebartemplate{0pt}{}
+
+
+\AtBeginDocument {%
+  \pgfdeclareimage[width=70mm]{liongrey}{LionSealGrey}
+}%
+
+
+\@beamer@option
+
+\usetitlepagetemplate{
+  \vbox to 0pt{\kern11.2mm\relax
+      \hbox to \hsize{\hss\pgfuseimage{liongrey}\hss}\vss}
+  \vbox to \textheight{
+    \vss
+    \begin{centering}
+      {\Large\color{LUblue}\bfseries\inserttitle\par}
+      \vspace{5mm}
+      {\normalsize\textbf\insertauthor\par}
+      \vspace{5mm}
+      {\scriptsize\insertinstitute\par}%\par\vskip1em
+    \end{centering}
+    \vss
+  }
+}
