@@ -33,6 +33,8 @@ ming language is needed to write high-performance code.
 This does not mean it happens automatically. It is the re-
 sponsability of the programmer to optimize the code that
 forms a bottleneck but this can done in Julia itself.*
+
+## Why use Julia?
 - Open source and free: The whole language and all packages!
 - Possible to understand what is going on, Julia is written in Julia!
 - Easy to get started

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://revealjs.com/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="https://revealjs.com/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'https://revealjs.com/css/print/pdf.css' : 'https://revealjs.com/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="https://revealjs.com/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section><section id="course.jl" class="titleslide slide level1"><h1>Course.jl</h1></section><section id="introduction" class="slide level2">
+<h2>Introduction</h2>
+<ul>
+<li>What is Julia?</li>
+<li>Why use it?</li>
+<li>Demo of standard libraries</li>
+<li>Plotting</li>
+<li>Documentation and help</li>
+</ul>
+</section><section id="homepage" class="slide level2">
+<h2>Homepage</h2>
+<p>Course homepage https://github.com/baggepinnen/juliacourse</p>
+</section><section id="what-is-julia" class="slide level2">
+<h2>What is Julia?</h2>
+<p>The Julia Language: A fresh approach to technical computing.</p>
+<ul>
+<li>Dynamically typed</li>
+<li>&quot;Optionally typed&quot;</li>
+<li>High-level language, simple syntax</li>
+<li><p>Multiple dispatch</p></li>
+<li>Version 0.1 Released Feb 2013</li>
+<li>Version 1.0 Released Aug 2018</li>
+<li>Latest version 1.2</li>
+<li><p>(I use 1.3-rc2 for the threading)</p></li>
+</ul>
+</section><section id="why-use-julia" class="slide level2">
+<h2>Why use Julia?</h2>
+<ul>
+<li>Solves the dual-language problem. From ThinkJulia.jl : <em>Julia is a unique programming language because it solves the so-called two languages problem. No other program- ming language is needed to write high-performance code. This does not mean it happens automatically. It is the re- sponsability of the programmer to optimize the code that forms a bottleneck but this can done in Julia itself.</em></li>
+</ul>
+</section><section id="why-use-julia-1" class="slide level2">
+<h2>Why use Julia?</h2>
+<ul>
+<li>Open source and free: The whole language and all packages!</li>
+<li>Possible to understand what is going on, Julia is written in Julia!</li>
+<li>Easy to get started</li>
+<li>Many third party libraries (3000+, not as many as Python)</li>
+</ul>
+</section><section id="fast" class="slide level2">
+<h2>Fast</h2>
+<figure>
+<img src="benchmarks.png" alt="window" /><figcaption>window</figcaption>
+</figure>
+<p>https://julialang.org/benchmarks/</p>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://revealjs.com/lib/js/head.min.js"></script>
+  <script src="https://revealjs.com/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'https://revealjs.com/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'https://revealjs.com/plugin/zoom-js/zoom.js', async: true },
+              { src: 'https://revealjs.com/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
