@@ -27,7 +27,6 @@ using BenchmarkTools
 
 q = qr(A)
 eigvals(q.Q)
-eigvals(Matrix(q.Q))
 
 names(LinearAlgebra)
 
@@ -80,10 +79,6 @@ Threads.@threads for i = 1:10
 end
 @show a
 
-Threads.@threads for i = 1:10
-    i+i
-    println(i)
-end
 
 
 # Printf
