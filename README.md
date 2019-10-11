@@ -17,10 +17,10 @@ Recommended reading: [Modules](https://docs.julialang.org/en/v1/manual/modules/)
 - [Types, functions multiple dispatch](https://github.com/baggepinnen/juliacourse/blob/master/lecture2/presentation.pdf)
 - [Performance and profiling](https://github.com/baggepinnen/juliacourse/blob/master/lecture3/performance.pdf)
 - [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf)
-- [ControlSystems.jl](https://github.com/baggepinnen/juliacourse/tree/master/lecture5)
-- [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
 - [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture7/distributed.pdf)
-- [Labs and hardware in Julia](https://github.com/baggepinnen/juliacourse/blob/master/lecture8/presentation.pdf)
+- [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
+- [ControlSystems.jl](https://github.com/baggepinnen/juliacourse/tree/master/lecture5)
+
 
 
 ## Previously under upcoming
