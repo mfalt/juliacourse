@@ -1,0 +1,292 @@
+% !TEX root=preamble.tex
+
+\title{Antipatterns and idiomatic Julia versions}
+
+\maketitle
+
+%====================================================================
+%====================================================================
+\begin{frame}{Introduction}{}
+    How to use multiple dispatch to structure your code
+
+    Some common patterns and anti-patterns
+\end{frame}
+
+
+
+\section{Dispatch on types}
+
+\begin{frame}[fragile]{Dispatch on types}{Antipattern}
+
+    \begin{minted}[fontsize=\small]{python}
+class Shape:
+    @property
+    def name(self):
+        return self.__class__
+
+class Rectangle(Shape): pass
+class Ellipse(Shape): pass
+
+def intersect(s1, s2):
+    if isinstance(s1, Rectangle) and isinstance(s2, Ellipse):
+        print('Rectangle x Ellipse [names s1=%s, s2=%s]' % (s1.name, s2.name))
+    elif isinstance(s1, Rectangle) and isinstance(s2, Rectangle):
+        print('Rectangle x Rectangle [names s1=%s, s2=%s]' % (s1.name, s2.name))
+    else:
+        # Generic shape intersection.
+        print('Shape x Shape [names s1=%s, s2=%s]' % (s1.name, s2.name))
+    \end{minted}
+    \bad{Drawback:} To implement a new geometry, the user has to
+modify the source code pf \mintinline[]{text}{intersect}
+
+\vspace{3mm}
+Can only dispatch based on one argument
+\end{frame}
+
+
+\begin{frame}[fragile]{Dispatch on types}{Multiple dispatch approach}
+    \begin{columns}
+ 	\begin{column}{0.8\textwidth}
+
+\begin{minted}[]{julia1}
+abstract type AbstractShape end
+struct Rectangle <: AbstractShape end
+struct Ellipse <: AbstractShape end
+
+intersect(s1::Rectangle, s2::Ellipse) = do_something...
+intersect(s1::Rectangle, s2::Rectangle) = do_something...
+intersect(s1, s2) = do_something...
+\end{minted}
+\end{column}
+\hspace{-5mm}
+\begin{column}{0.3\textwidth}
+    \nice{Benefit:} The user can send in an arbitrary existing subtype of
+    \mintinline[]{text}{AbstractShape} as well as creating new such
+    subtypes without modifying the function \mintinline[]{text}{intersect}.
+
+    \vspace{3mm}
+    Can dispatch based on both types.
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+\section{Dispatch on strings}\label{dispatch-on-strings}
+
+\begin{frame}[fragile]{Dispatch on strings}{Antipattern}
+
+\begin{minted}[]{julia1}
+function process(data, preprocess="sumto1")
+    if preprocess == "sumto1"
+        data = data ./ sum(data)
+    elseif preprocess == "norm1"
+        data = data ./ norm(data)
+    elseif preprocess == "filter"
+        data = filter(data)
+    end
+    do_something_with(data)
+end
+\end{minted}
+
+\bad{Drawback:} To implement a new form of preprocessing, the user has to
+modify the source code pf \mintinline[]{text}{process}
+
+\end{frame}
+
+\begin{frame}[fragile]{Dispatch on strings}{Functional approach}
+
+\begin{minted}[]{julia1}
+function process(data, preprocess)
+    data = preprocess(data)
+    do_something_with(data)
+end
+\end{minted}
+
+\nice{Benefit:} The user can send in an arbitrary function
+
+\end{frame}
+
+\begin{frame}[fragile]{Dispatch on strings}{Multiple dispatch approach}
+    \begin{columns}
+ 	\begin{column}{0.7\textwidth}
+
+\begin{minted}[]{julia1}
+abstract type AbstractPreprocesser end
+
+struct SumToOne <: AbstractPreprocesser end
+preprocess(::SumToOne, data) = data ./ sum(data)
+
+struct NormOne <: AbstractPreprocesser end
+preprocess(::NormOne, data) = data ./ norm(data)
+
+struct Filter <: AbstractPreprocesser
+    cutoff
+end
+preprocess(f::Filter, data) = filter(data, f.cutoff)
+
+function process(data, processor)
+    data = preprocess(processor, data)
+    do_something_with(data)
+end
+\end{minted}
+\end{column}
+\begin{column}{0.3\textwidth}
+    \nice{Benefit:} The user can send in an arbitrary existing subtype of
+    \mintinline[]{text}{AbstractPreprocesser} as well as creating new such
+    subtypes without modifying the function \mintinline[]{text}{preprocess}.
+\end{column}
+\end{columns}
+
+
+\end{frame}
+
+
+
+\section{Several names for the same function}\label{several-names-for-the-same-function}
+
+\begin{frame}[fragile]{Several names for the same function}{Antipattern}
+    \begin{columns}
+ 	\begin{column}{0.65\textwidth}
+
+\begin{minted}[fontsize=\footnotesize]{julia1}
+function optimize_gd(problem, x)
+    for i in iterations
+        x = take_gd_step(x, problem)
+        convergence_check_x(x) && break
+        convergence_check_gradient(x, problem) && break
+        convergence_check_funval(x) && break
+    end
+    x
+end
+function optimize_bfgs(problem, x)
+    for i in iterations
+        x = take_bfgs_step(x, problem)
+        convergence_check_x(x) && break
+        convergence_check_gradient(x, problem) && break
+        convergence_check_funval(x) && break
+    end
+    x
+end
+function optimize_newton(problem, x)
+    for i in iterations
+        x = take_newton_step(x, problem)
+        convergence_check_x(x) && break
+        convergence_check_gradient(x, problem) && break
+        convergence_check_funval(x) && break
+    end
+    x
+end
+\end{minted}
+
+\end{column}
+\begin{column}{0.4\textwidth}
+\bad{Drawback:} The \emph{function} is the same, it find the optimum, what
+differs is the \emph{method}.
+
+\vspace{3mm}
+The different names are only used for
+dispatch. Lots of code is repeated, all algorithms have the same
+structure.
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Several names for the same function}{Multiple dispatch approach}
+        \begin{columns}
+     	\begin{column}{0.8\textwidth}
+            \begin{minted}[fontsize=\footnotesize]{julia1}
+abstract type AbstractOptimizer end
+
+struct GradientDescent <: AbstractOptimizer
+    stepsize
+end
+struct BFGS <: AbstractOptimizer end
+struct Newton <: AbstractOptimizer
+    preconditioner
+end
+
+step(::GradientDescent, x, problem) = take_gd_step(x, problem)
+step(::BFGS, x, problem) = take_bfgs_step(x, problem)
+step(f::Newton, x, problem) = take_newton_step(x, problem)
+
+function process(problem, x, algorithm)
+    for i in iterations
+        x = step(algorithm, x, problem)
+        convergence_check_x(x) && break
+        convergence_check_gradient(x, problem) && break
+        convergence_check_funval(x) && break
+    end
+    x
+end
+            \end{minted}
+\end{column}
+\hspace{-7mm}
+\begin{column}{0.4\textwidth}
+\nice{Benefit:} The outer algorithm is only implemented once, the behaviour
+that differs is the step, dispatched using types.
+
+\vspace{3mm}
+No need to copy the code in outer algorithm to implement a new optimization method.
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Other antipatterns}{}
+    \begin{columns}
+        \begin{column}{0.5\textwidth}
+            \begin{block}{Antipatterns}
+        \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, frame=lines, fontsize=\small, framesep=2mm]{julia}
+repmat(v,1,10) .* A
+for i ∈ collect(1:100)
+randn(10,1)
+0
+Vector{typeof(x)}(undef, length(x))
+mean(x.^2)
+f(x::Float64) = x^2
+middle(x::Vector) = x[end÷2]
+        \end{minted}
+        Functions that operate elementwise over arrays
+    \end{block}
+    \end{column}
+
+    \begin{column}{0.5\textwidth}
+        \begin{block}{Nice patterns}
+    \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, frame=lines, fontsize=\small, framesep=2mm]{julia}
+v .* A
+for i ∈ 1:100
+randn(10)
+zero(x)
+similar(x)
+mean(abs2, x)
+f(x) = x^2
+middle(x::AbstractVector) = x[end÷2]
+    \end{minted}
+    Broadcast a scalar function
+\end{block}
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{Common Julia idioms}{}
+    \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, frame=lines, fontsize=\small, framesep=2mm]{julia}
+condition && return x
+    \end{minted}
+
+
+
+\end{frame}

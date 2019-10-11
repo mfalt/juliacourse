@@ -1,0 +1,109 @@
+\documentclass[10pt]{beamer}
+\usepackage[T1]{fontenc}
+% \usepackage[utf8]{inputenc}
+% \usepackage{newtxtext,newtxmath,inconsolata}
+
+%\usepackage{schoolbook}
+% \usepackage{amssymb,amsmath}
+% \usepackage{unicode-math}
+% \usepackage{fontspec}\setmonofont{DejaVu Sans Mono}[Scale=0.75]
+% \usepackage{fourier}\DeclareSymbolFont{symbols2}     {OMS}{cmsy}{m}{n} \DeclareSymbolFontAlphabet{\mathcal}{symbols2}\linespread{0.95}
+% \usefonttheme[]{serif}
+
+\usepackage{unicode-math}
+\usepackage{fontspec}
+\setmainfont{Tex Gyre Pagella}[Scale=0.85]
+\setmathfont{Tex Gyre Pagella Math}[Scale=MatchLowercase]
+\setsansfont{TeX Gyre Heros}[Scale=MatchLowercase]
+\setmonofont{DejaVu Sans Mono}[Scale=0.75]
+\DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+
+\usepackage{pgfplots}
+\usepackage[outputdir=build]{minted} \usemintedstyle{atomone}% Obs! Install latest version of minted for breaklines and outputdir to work
+
+\usepackage{microtype}
+\usepackage{hyperref}
+\hypersetup{
+pdfauthor={Fredrik Bagge Carlson},
+colorlinks=true,
+linkcolor=blue!40!black,
+citecolor=black,
+urlcolor=blue!40!black,
+}
+%\usepackage[maxnames=3, minnames=2, maxcitenames=2,
+%style=authoryear]{biblatex}
+\usepackage[capitalise]{cleveref}
+\usepackage{graphicx,subcaption}
+\crefname{section}{Sec.}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+
+
+\usepackage{color}
+\newcommand{\nice}[1]{{\color{green}#1}}
+\newcommand{\bad}[1]{{\color{red}#1}}
+\newcommand{\highlight}[1]{{\color{actualbronze}#1}}
+\newcommand{\niceat}[2]{{\color<#1>{green}#2}}
+\newcommand{\badat}[2]{{\color<#1>{red}#2}}
+\newcommand{\highlightat}[2]{{\color<#1>{actualbronze}#2}}
+\newcommand{\remark}[1]{{\color{gray}(#1)}}
+\newcommand{\cmt}[1]{{\color{yellow}{\textbf{Comment:} #1}}}
+
+\definecolor{red}{rgb}{0.7,0.2,0.2}
+\definecolor{blue}{rgb}{0,0,0.55}
+\definecolor{green}{rgb}{0.1,.65,0.25}
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{yellow}{rgb}{.5,.5,0}
+
+
+
+\newcommand{\T}{^{\hspace{-0.1mm}\scriptscriptstyle \mathsf{T}}\hspace{-0.2mm}}
+\newcommand{\iT}{^{\scriptscriptstyle -\mathsf{T}}\hspace{-0.6mm}}
+\newcommand{\inspace}[1]{\in \mathbb{R}^{#1}}
+
+\newcommand{\norm}[1]{\begin{Vmatrix}#1\end{Vmatrix}}
+\newcommand{\normf}[1]{\begin{Vmatrix}#1\end{Vmatrix}_F}
+\newcommand{\normt}[1]{\begin{Vmatrix}#1\end{Vmatrix}_2}
+
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator{\sign}{sign}
+\newcommand{\minimize}[1]{\underset{#1}{\text{minimize} }}
+\newcommand{\subjto}{\text{subject to }}
+
+
+\usepackage{algorithm}
+\setminted[julia1]{breaklines, numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm}
+\setminted[jlcon1]{breaklines, numbersep=3pt, gobble=0, frame=none, fontsize=\small, framesep=2mm}
+
+% \AtBeginSection[]{
+%   \begin{frame}
+%   \vfill
+%   \centering
+%   \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+%     \usebeamerfont{title}\insertsectionhead\par%
+%   \end{beamercolorbox}
+%   \vfill
+%   \end{frame}
+% }
+
+
+
+% \newsubfloat{figure}% Allow subfloats in figure environment
+\begin{document}
+\newlength\figureheight
+\newlength\figurewidth
+\setlength{\figurewidth}{0.4\textwidth}
+\setlength{\figureheight }{4cm }
+
+% \begin{titleframe}
+
+\author{Fredrik Bagge Carlson\\ \texttt{fredrik.bagge@nus.edu.sg}}
+% \end{titleframe}
+
+
+\input{contents.tex}
+
+
+\end{document}
