@@ -1,4 +1,28 @@
 \documentclass[10pt]{beamer}
+\usetheme{Madrid}
+\definecolor{babyblue}{rgb}{0.725, 0.827, 0.863}
+\definecolor{darkmintgreen}{rgb}{\directlua{tex.print{0.8*0.678}}, \directlua{tex.print{0.8*0.792}}, \directlua{tex.print{0.8*0.722}}}
+\definecolor{mintgreen}{rgb}{0.678, 0.792, 0.722}
+\definecolor{babypink}{rgb}{0.914, 0.769, 0.78}
+\definecolor{goldish}{rgb}{0.839, 0.824, 0.769}\definecolor{goldishlight}{rgb}{0.961,  0.949,  0.925}
+\definecolor{bronze}{rgb}{0.61,  0.38,  0.08}
+
+\setbeamercolor{palette primary}{bg=babyblue}
+\setbeamercolor{palette secondary}{bg=mintgreen}
+\setbeamercolor{palette tertiary}{bg=goldish}
+
+
+% \setbeamercolor{structure}{fg=babyblue} % Change color of item bullet
+\setbeamercolor{item}{fg=bronze} % Change color of item bullet
+\setbeamercolor{block title}{bg=mintgreen}
+\setbeamercolor{title}{fg=bronze, bg=white}
+\setbeamercolor{bibliography item}{fg=bronze}
+\setbeamercolor*{bibliography entry title}{fg=black}
+\setbeamercolor*{bibliography entry author}{fg=darkmintgreen}
+\setbeamercolor*{bibliography entry note}{fg=darkmintgreen}
+
+
+
 \usepackage[T1]{fontenc}
 % \usepackage[utf8]{inputenc}
 % \usepackage{newtxtext,newtxmath,inconsolata}
@@ -7,7 +31,7 @@
 % \usepackage{amssymb,amsmath}
 % \usepackage{unicode-math}
 % \usepackage{fontspec}\setmonofont{DejaVu Sans Mono}[Scale=0.75]
-% \usepackage{fourier}\DeclareSymbolFont{symbols2}     {OMS}{cmsy}{m}{n} \DeclareSymbolFontAlphabet{\mathcal}{symbols2}\linespread{0.95}
+\usepackage{fourier}\DeclareSymbolFont{symbols2}     {OMS}{cmsy}{m}{n} \DeclareSymbolFontAlphabet{\mathcal}{symbols2}\linespread{0.95}
 % \usefonttheme[]{serif}
 
 \usepackage{unicode-math}
