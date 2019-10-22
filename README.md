@@ -7,9 +7,9 @@ Teachers:
 [Fredrik Bagge Carlson](http://control.lth.se/staff/fredrik-bagge-carlson/) ([@baggepinnen](https://github.com/baggepinnen))
 
 ## Upcoming
-Session on thursday 17/10 1600 hrs [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf) and [Design patterns and antipatterns](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation_design_patterns.pdf)
+Session on Thursday 24/10 [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
 
-Recommended reading: [Modules](https://docs.julialang.org/en/v1/manual/modules/), [Workflow tips](https://docs.julialang.org/en/v1/manual/workflow-tips/)
+Recommended reading: [Parallel computing in Julia](https://lup.lub.lu.se/search/publication/873af4d5-6229-4ad2-b907-c0ae0f667822)
 
 ## Lectures
 (preliminary schedule)
@@ -17,13 +17,19 @@ Recommended reading: [Modules](https://docs.julialang.org/en/v1/manual/modules/)
 - [Types, functions multiple dispatch](https://github.com/baggepinnen/juliacourse/blob/master/lecture2/presentation.pdf)
 - [Performance and profiling](https://github.com/baggepinnen/juliacourse/blob/master/lecture3/performance.pdf)
 - [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf)
-- [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture7/distributed.pdf)
+- [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
 - [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
-- [ControlSystems.jl](https://github.com/baggepinnen/juliacourse/tree/master/lecture5)
+- [ControlSystems.jl](https://github.com/baggepinnen/juliacourse/tree/master/lecture7)
 
 
 
 ## Previously under upcoming
+
+Session on thursday 17/10 1600 hrs [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf) and [Design patterns and antipatterns](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation_design_patterns.pdf)
+
+Recommended reading: [Modules](https://docs.julialang.org/en/v1/manual/modules/), [Workflow tips](https://docs.julialang.org/en/v1/manual/workflow-tips/)
+
+--------------------------------------------------------------------------------
 
 Session on monday 7/10 1600 hrs [Types, functions multiple dispatch](https://github.com/baggepinnen/juliacourse/blob/master/lecture2/presentation.pdf)
 
