@@ -1,5 +1,25 @@
 \documentclass[10pt]{beamer}
-\usetheme[liontopcorner,framenumbers]{Regler2}
+\usetheme{Madrid}
+\definecolor{babyblue}{rgb}{0.725, 0.827, 0.863}
+\definecolor{darkmintgreen}{rgb}{\directlua{tex.print{0.8*0.678}}, \directlua{tex.print{0.8*0.792}}, \directlua{tex.print{0.8*0.722}}}
+\definecolor{mintgreen}{rgb}{0.678, 0.792, 0.722}
+\definecolor{babypink}{rgb}{0.914, 0.769, 0.78}
+\definecolor{goldish}{rgb}{0.839, 0.824, 0.769}\definecolor{goldishlight}{rgb}{0.961,  0.949,  0.925}
+\definecolor{bronze}{rgb}{0.61,  0.38,  0.08}
+
+\setbeamercolor{palette primary}{bg=babyblue}
+\setbeamercolor{palette secondary}{bg=mintgreen}
+\setbeamercolor{palette tertiary}{bg=goldish}
+
+
+% \setbeamercolor{structure}{fg=babyblue} % Change color of item bullet
+\setbeamercolor{item}{fg=bronze} % Change color of item bullet
+\setbeamercolor{block title}{bg=mintgreen}
+\setbeamercolor{title}{fg=bronze, bg=white}
+\setbeamercolor{bibliography item}{fg=bronze}
+\setbeamercolor*{bibliography entry title}{fg=black}
+\setbeamercolor*{bibliography entry author}{fg=darkmintgreen}
+\setbeamercolor*{bibliography entry note}{fg=darkmintgreen}
 \usepackage[T1]{fontenc}
 % \usepackage[utf8]{inputenc}
 % \usepackage{newtxtext,newtxmath,inconsolata}
@@ -448,7 +468,6 @@ julia> sizeof(zeros(10_000,1_000)) ÷ 1e6
 %====================================================================
 \begin{frame}{Not thread safe by default}{}
     \begin{itemize}
-        \item IO (e.g., \texttt{println})
         \item Random
         \item Regex
     \end{itemize}
@@ -468,6 +487,42 @@ julia> sizeof(zeros(10_000,1_000)) ÷ 1e6
     \begin{itemize}
         \item Loop iterations must be independent
     \end{itemize}
+\end{frame}
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{How to thread}{}
+    Threaded map from \href{https://github.com/baggepinnen/ThreadTools.jl}{ThreadTools.jl}
+    \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, fontsize=\small, framesep=2mm]{jlcon1}
+julia> tmap(_->threadid(), 1:5) # A threaded version of map
+5-element Array{Int64,1}:
+ 2
+ 6
+ 3
+ 4
+ 5
+    \end{minted}
+
+
+\end{frame}
+
+
+
+%====================================================================
+%====================================================================
+\begin{frame}[fragile]{How to thread}{}
+    Spawn independent calculations
+    \begin{minted}[breaklines,escapeinside=||,mathescape=true, numbersep=3pt, gobble=0, fontsize=\small, framesep=2mm]{jlcon1}
+julia> using Base.Threads
+
+julia> f = Threads.@spawn sin(2)
+Task (runnable) @0x00007f2898af44f0
+
+julia> fetch(f)
+0.9092974268256817
+    \end{minted}
+
+
 \end{frame}
 
 
