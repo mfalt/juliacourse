@@ -7,9 +7,19 @@ Teachers:
 [Fredrik Bagge Carlson](http://control.lth.se/staff/fredrik-bagge-carlson/) ([@baggepinnen](https://github.com/baggepinnen))
 
 ## Upcoming
-Session on Thursday 24/10 [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
+Session on Monday 4/11 [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
 
-Recommended reading: [Parallel computing in Julia](https://lup.lub.lu.se/search/publication/873af4d5-6229-4ad2-b907-c0ae0f667822)
+It's recommended that you install the following packages before the session
+```julia
+using Pkg
+Pkg.add(PackageSpec(name="Flux",rev="master")) # We will use the latest version of Flux
+Pkg.add("IJulia")
+Pkg.add("Optim")
+Pkg.add("JuMP")
+Pkg.add("Zygote")
+Pkg.add("ForwardDiff")
+Pkg.precompile()
+```
 
 ## Lectures
 (preliminary schedule)
@@ -24,6 +34,12 @@ Recommended reading: [Parallel computing in Julia](https://lup.lub.lu.se/search/
 
 
 ## Previously under upcoming
+
+Session on Thursday 24/10 [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
+
+Recommended reading: [Parallel computing in Julia](https://lup.lub.lu.se/search/publication/873af4d5-6229-4ad2-b907-c0ae0f667822)
+
+--------------------------------------------------------------------------------
 
 Session on thursday 17/10 1600 hrs [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf) and [Design patterns and antipatterns](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation_design_patterns.pdf)
 
