@@ -18,6 +18,8 @@ Pkg.add("Optim")
 Pkg.add("JuMP")
 Pkg.add("Zygote")
 Pkg.add("ForwardDiff")
+Pkg.add("Ipopt")
+Pkg.add("GLPK")
 Pkg.precompile()
 ```
 
