@@ -7,7 +7,7 @@ Teachers:
 [Fredrik Bagge Carlson](http://control.lth.se/staff/fredrik-bagge-carlson/) ([@baggepinnen](https://github.com/baggepinnen))
 
 ## Upcoming
-Session on Monday 4/11 [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
+Session on Monday 11/11 [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
 
 It's recommended that you install the following packages before the session
 ```julia
@@ -20,7 +20,7 @@ Pkg.add("Zygote")
 Pkg.add("ForwardDiff")
 Pkg.add("Ipopt")
 Pkg.add("GLPK")
-Pkg.precompile()
+Pkg.precompile() # OBS!!! Only run this statement if you do it before the session, it will take a long time to finish.
 ```
 
 ## Lectures
