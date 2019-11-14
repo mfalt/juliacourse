@@ -7,6 +7,34 @@ Teachers:
 [Fredrik Bagge Carlson](http://control.lth.se/staff/fredrik-bagge-carlson/) ([@baggepinnen](https://github.com/baggepinnen))
 
 ## Upcoming
+Session on Thursday 14/11 [Control systems and DSP](https://github.com/baggepinnen/juliacourse/tree/master/lecture7) 
+
+Install [ControlSystems.jl](https://github.com/JuliaControl/ControlSystems.jl) and [ControlSystemIdentification.jl](https://github.com/baggepinnen/ControlSystemIdentification.jl)
+by running
+```julia
+using Pkg
+Pkg.update()
+Pkg.add("ControlSystems")
+Pkg.add("ControlSystemIdentitifaction")
+Pkg.add("DSP")
+```
+
+
+## Lectures
+(preliminary schedule)
+- [Intro](https://github.com/baggepinnen/juliacourse/blob/master/lecture1/presentation.pdf)
+- [Types, functions multiple dispatch](https://github.com/baggepinnen/juliacourse/blob/master/lecture2/presentation.pdf)
+- [Performance and profiling](https://github.com/baggepinnen/juliacourse/blob/master/lecture3/performance.pdf)
+- [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf)
+- [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
+- [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
+- [Control systems and DSP](https://github.com/baggepinnen/juliacourse/tree/master/lecture7)
+
+
+
+## Previously under upcoming
+
+
 Session on Monday 4/11 [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
 
 It's recommended that you install the following packages before the session
@@ -23,19 +51,9 @@ Pkg.add("GLPK")
 Pkg.precompile()
 ```
 
-## Lectures
-(preliminary schedule)
-- [Intro](https://github.com/baggepinnen/juliacourse/blob/master/lecture1/presentation.pdf)
-- [Types, functions multiple dispatch](https://github.com/baggepinnen/juliacourse/blob/master/lecture2/presentation.pdf)
-- [Performance and profiling](https://github.com/baggepinnen/juliacourse/blob/master/lecture3/performance.pdf)
-- [Workflow](https://github.com/baggepinnen/juliacourse/blob/master/lecture4/presentation.pdf)
-- [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
-- [Optimization and Learning](https://github.com/baggepinnen/juliacourse/tree/master/lecture6)
-- [ControlSystems.jl](https://github.com/baggepinnen/juliacourse/tree/master/lecture7)
 
+--------------------------------------------------------------------------------
 
-
-## Previously under upcoming
 
 Session on Thursday 24/10 [Parallel and distributed computing](https://github.com/baggepinnen/juliacourse/blob/master/lecture5/distributed.pdf)
 
