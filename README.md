@@ -17,8 +17,17 @@ Pkg.update()
 Pkg.add("ControlSystems")
 Pkg.add("ControlSystemIdentitifaction")
 Pkg.add("DSP")
+Pkg.add("LPVSpectral")
+Pkg.add("https://github.com/baggepinnen/SpectralDistances.jl")
+Pkg.add("Interact")
+Pkg.precompile()
 ```
+Follow further [install instructions](https://juliagizmos.github.io/WebIO.jl/latest/troubleshooting/not-detected/#Jupyter-Notebook-1) for WebIO if you want to use the interactive elements of the notebooks.
 
+To run the identification notebooks, run the following in the terminal
+```
+git clone https://github.com/JuliaControl/ControlExamples.jl.git
+```
 
 ## Lectures
 (preliminary schedule)
