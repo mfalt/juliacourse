@@ -7,7 +7,7 @@ Teachers:
 [Fredrik Bagge Carlson](http://control.lth.se/staff/fredrik-bagge-carlson/) ([@baggepinnen](https://github.com/baggepinnen))
 
 ## Upcoming
-Session on Thursday 14/11 [Control systems and DSP](https://github.com/baggepinnen/juliacourse/tree/master/lecture7) 
+Session on Thursday 14/11 [Control systems and DSP](https://github.com/baggepinnen/juliacourse/tree/master/lecture7)
 
 Install [ControlSystems.jl](https://github.com/JuliaControl/ControlSystems.jl) and [ControlSystemIdentification.jl](https://github.com/baggepinnen/ControlSystemIdentification.jl)
 by running
@@ -48,7 +48,7 @@ Pkg.add("Zygote")
 Pkg.add("ForwardDiff")
 Pkg.add("Ipopt")
 Pkg.add("GLPK")
-Pkg.precompile()
+Pkg.precompile() # OBS!!! Only run this statement if you do it before the session, it will take a long time to finish.
 ```
 
 
