@@ -74,4 +74,4 @@ even(10) # Odd is not defined at call time
 
 odd(n) = (n == 0) ? false : even(n - 1)
 # But here it is
-even(1000)
+@time even(10000)

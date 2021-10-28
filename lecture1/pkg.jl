@@ -3,10 +3,15 @@ Pkg.add("Plots")
 
 ] add Plots
 
-add ControlSystems#master
+add Chess#master
 
-dev ControlSystems
-
-add https://github.com/baggepinnen/ControlSystemIdentification.jl
+add https://github.com/mfalt/FirstOrderSolvers.jl
 
 update
+
+
+;
+ls
+cd
+
+

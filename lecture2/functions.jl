@@ -48,25 +48,19 @@ function arraystring(a=[3,2,1]; space=' ', delim=',', brackets=('[',']'))
     s = ""
     s *= brackets[1]
     for i in 1:length(a)
-        s *= space*string(a[i])*delim
+        post = (i == length(a) ? "" : delim*space)
+        s *= string(a[i])*post
     end
     s *= brackets[2]
     println(s)
 end
 
-a = 1:5
+
 arraystring()
 arraystring(space="    ")
 ##
 
-
-##
-# For nicer printing: copy this into the loop:
-post = (i == length(a) ? "" : delim*space)
-s *= string(a[i])*post
-##
-
-
+a = 1:5
 ##
 arraystring(a)
 arraystring(a, space="    ")
