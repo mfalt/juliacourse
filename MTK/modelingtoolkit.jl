@@ -67,7 +67,7 @@ end
 model = Model(sin(30t))
 sys = structural_simplify(model)
 prob = ODEProblem(sys, Pair[], (0., 1.))
-sol = solve(prob, Rosenbrock23())
+sol = solve(prob, Rodas5())
 plot(sol)
 
 
@@ -86,15 +86,19 @@ connections = [
 ]
 closed_loop = structural_simplify(ODESystem(connections, t, systems=[model, pid, filt], name=:closed_loop))
 prob = ODEProblem(closed_loop, Pair[], (0., 4.))
-sol = solve(prob, Rosenbrock23())#, dtmin=1e-15, force_dtmin=true);
+sol = solve(prob, Rodas5())#, dtmin=1e-15, force_dtmin=true);
 plot(plot(sol, vars=[filt.y, model.mass1.pos, model.mass2.pos]), plot(sol, vars=[pid.ctr_output.u], title="Control signal"), legend=:bottomright)
+
+
+
+
 
 
 ## Using the standard library ==================================================
 using ModelingToolkitStandardLibrary.Mechanical.Rotational
 
-@named mass1 = Inertia(; J=m1)
-@named mass2 = Inertia(; J=m2)
+@named inertia1 = Inertia(; J=m1)
+@named inertia2 = Inertia(; J=m2)
 
 @named spring = Rotational.Spring(; c=k)
 @named damper = Rotational.Damper(; d=c)
@@ -105,17 +109,17 @@ using ModelingToolkitStandardLibrary.Mechanical.Rotational
 function StdlibModel(u, d=0)
     eqs = [
         torque.tau.u ~ u
-        connect(torque.flange, mass1.flange_a)
-        connect(mass1.flange_b, spring.flange_a, damper.flange_a)
-        connect(mass2.flange_a, spring.flange_b, damper.flange_b)
+        connect(torque.flange, inertia1.flange_a)
+        connect(inertia1.flange_b, spring.flange_a, damper.flange_a)
+        connect(inertia2.flange_a, spring.flange_b, damper.flange_b)
     ]
-    @named model = ODESystem(eqs, t; systems=[torque, mass1, mass2, spring, damper])
+    @named model = ODESystem(eqs, t; systems=[torque, inertia1, inertia2, spring, damper])
 end
 
 model = StdlibModel(sin(30t))
 sys = structural_simplify(model)
 prob = ODEProblem(sys, Pair[], (0., 1.))
-sol = solve(prob, Rosenbrock23())
+sol = solve(prob, Rodas5())
 plot(sol)
 
 ## Close the loop with connect =================================================
@@ -129,9 +133,10 @@ connections = [
     filt.u ~ t >= 1 # a reference step at t = 1
     connect(filt.output, pid.reference)
     connect(pid.ctr_output, model.torque.tau)
-    pid.measurement.u ~ model.mass1.phi
+    pid.measurement.u ~ model.inertia1.phi
 ]
 closed_loop = structural_simplify(ODESystem(connections, t, systems=[model, pid, filt], name=:closed_loop))
 prob = ODEProblem(closed_loop, Pair[], (0., 4.))
-sol = solve(prob, Rosenbrock23())#, dtmin=1e-15, force_dtmin=true);
-plot(plot(sol, vars=[filt.y, model.mass1.phi, model.mass2.phi]), plot(sol, vars=[pid.ctr_output.u], title="Control signal"), legend=:bottomright)
+sol = solve(prob, Rodas5())#, dtmin=1e-15, force_dtmin=true);
+plot(plot(sol, vars=[filt.y, model.inertia1.phi, model.inertia2.phi]), plot(sol, vars=[pid.ctr_output.u], title="Control signal"), legend=:bottomright)
+
