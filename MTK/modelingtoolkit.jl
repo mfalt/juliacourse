@@ -1,3 +1,6 @@
+using Pkg
+Pkg.activate(@__DIR__())
+##
 using ModelingToolkit, OrdinaryDiffEq, Plots
 @parameters t
 Dₜ = Differential(t)
