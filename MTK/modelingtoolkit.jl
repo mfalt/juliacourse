@@ -125,17 +125,21 @@ plot(sol)
 ## Close the loop with connect =================================================
 
 using ModelingToolkitStandardLibrary.Blocks: LimPID, FirstOrder
+using ModelingToolkitStandardLibrary.Mechanical.Rotational: AngleSensor
 @variables u(t)=0 [input=true]
 model = StdlibModel(u)
 @named pid = LimPID(k=400, Ti=1, Td=1)
 @named filt = FirstOrder(T=0.1)
+@named sensor = AngleSensor()
+
 connections = [
     filt.u ~ t >= 1 # a reference step at t = 1
     connect(filt.output, pid.reference)
     connect(pid.ctr_output, model.torque.tau)
-    pid.measurement.u ~ model.inertia1.phi
+    connect(model.inertia1.flange_b, sensor.flange)
+    connect(pid.measurement, sensor.phi)
 ]
-closed_loop = structural_simplify(ODESystem(connections, t, systems=[model, pid, filt], name=:closed_loop))
+closed_loop = structural_simplify(ODESystem(connections, t, systems=[model, pid, filt, sensor], name=:closed_loop))
 prob = ODEProblem(closed_loop, Pair[], (0., 4.))
 sol = solve(prob, Rodas5())#, dtmin=1e-15, force_dtmin=true);
 plot(plot(sol, vars=[filt.y, model.inertia1.phi, model.inertia2.phi]), plot(sol, vars=[pid.ctr_output.u], title="Control signal"), legend=:bottomright)
