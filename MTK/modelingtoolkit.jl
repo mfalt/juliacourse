@@ -103,6 +103,7 @@ plot(
 
 ## Using the standard library ==================================================
 using ModelingToolkitStandardLibrary.Mechanical.Rotational
+using ModelingToolkitStandardLibrary.Blocks: Sine
 
 @named inertia1 = Inertia(; J = m1)
 @named inertia2 = Inertia(; J = m2)
@@ -113,17 +114,20 @@ using ModelingToolkitStandardLibrary.Mechanical.Rotational
 @named torque = Torque()
 
 
-function StdlibModel(u, d = 0)
+function StdlibModel(u=nothing)
     eqs = [
-        torque.tau.u ~ u
         connect(torque.flange, inertia1.flange_a)
         connect(inertia1.flange_b, spring.flange_a, damper.flange_a)
         connect(inertia2.flange_a, spring.flange_b, damper.flange_b)
     ]
+    if u !== nothing 
+        push!(eqs, connect(torque.tau, u.output))
+        return @named model = ODESystem(eqs, t; systems = [torque, inertia1, inertia2, spring, damper, u])
+    end
     @named model = ODESystem(eqs, t; systems = [torque, inertia1, inertia2, spring, damper])
 end
 
-model = StdlibModel(sin(30t))
+model = StdlibModel(Sine(frequency=30/2pi, name=:u))
 sys = structural_simplify(model)
 prob = ODEProblem(sys, Pair[], (0.0, 1.0))
 sol = solve(prob, Rodas5())
@@ -131,24 +135,27 @@ plot(sol)
 
 ## Close the loop with connect =================================================
 
-using ModelingToolkitStandardLibrary.Blocks: LimPID, FirstOrder
+using ModelingToolkitStandardLibrary.Blocks: LimPID, FirstOrder, Step
 using ModelingToolkitStandardLibrary.Mechanical.Rotational: AngleSensor
 
-@variables u(t) = 0 [input = true]
-model = StdlibModel(u)
+
+
+# @variables u(t) = 0 [input = true]
+@named r = Step(start_time=1)
+model = StdlibModel()
 @named pid = LimPID(k = 400, Ti = 0.5, Td = 1, u_max=350)
 @named filt = FirstOrder(T = 0.1)
 @named sensor = AngleSensor()
 
 connections = [
-    filt.u ~ t >= 1 # a reference step at t = 1
+    connect(r.output, filt.input)
     connect(filt.output, pid.reference)
     connect(pid.ctr_output, model.torque.tau)
     connect(model.inertia1.flange_b, sensor.flange)
     connect(pid.measurement, sensor.phi)
 ]
 closed_loop = structural_simplify(
-    ODESystem(connections, t, systems = [model, pid, filt, sensor], name = :closed_loop),
+    ODESystem(connections, t, systems = [model, pid, filt, sensor, r], name = :closed_loop),
 )
 prob = ODEProblem(closed_loop, Pair[], (0.0, 4.0))
 sol = solve(prob, Rodas5())#, dtmin=1e-15, force_dtmin=true);
