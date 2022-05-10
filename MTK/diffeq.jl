@@ -1,3 +1,8 @@
+using Pkg
+Pkg.activate(@__DIR__())
+
+# Differential equations with inputs
+
 ## Using interpolations
 using OrdinaryDiffEq, Plots, DataInterpolations, StaticArrays
 
@@ -41,8 +46,6 @@ plot(sol)
 ## trim the system =============================================================
 using Optim, DiffEqCallbacks, ForwardDiff, ControlSystems
 
-hr0 = [10, 10, 6, 6]; # desired reference state
-
 function quadtank_input(h, u, p, t)
     kc = 0.5
     k1, k2, g = 1.6, 1.6, 9.81
@@ -55,12 +58,15 @@ function quadtank_input(h, u, p, t)
     xd = SA[
         -a1/A1 * ssqrt(2g*h[1]) + a3/A1*ssqrt(2g*h[3]) +     γ1*k1/A1 * u[1]
         -a2/A2 * ssqrt(2g*h[2]) + a4/A2*ssqrt(2g*h[4]) +     γ2*k2/A2 * u[2]
-        -a3/A3*ssqrt(2g*h[3])                          + (1-γ2)*k2/A3 * u[2]
-        -a4/A4*ssqrt(2g*h[4])                          + (1-γ1)*k1/A4 * u[1]
+        -a3/A3 * ssqrt(2g*h[3])                        + (1-γ2)*k2/A3 * u[2]
+        -a4/A4 * ssqrt(2g*h[4])                        + (1-γ1)*k1/A4 * u[1]
     ]
 end
+
+hr0 = [10, 10, 6, 6]; # desired reference state
+
 hr, ur = begin # control input at the operating opint
-	optres = @views Optim.optimize(xu->sum(abs, quadtank_input(xu[1:4],xu[5:6],0,0)) + 0.0001sum(abs2, xu[1:4]-hr0), [xr0;.25;.25], BFGS(), Optim.Options(iterations=100, x_tol=1e-7))
+	optres = @views Optim.optimize(xu->sum(abs, quadtank_input(xu[1:4],xu[5:6],0,0)) + 0.0001sum(abs2, xu[1:4]-hr0), [hr0;.25;.25], BFGS(), Optim.Options(iterations=100, x_tol=1e-7))
 	@info optres
 	optres.minimizer[1:4], optres.minimizer[5:6]
 end
@@ -70,7 +76,7 @@ end
 ##
 const u_cache = zeros(2)
 ## ZoH feedback law ============================================================
-
+Ts = 10
 function quadtank(h, p, t)
     u = u_cache
     kc = 0.5
@@ -104,7 +110,7 @@ K = lqr(sysd, diagm([2,2,1,1]), Matrix(1I(2)))
 
 function affect!(integrator)
     h = integrator.u
-    mul!(u_cache, K, hr - h)
+    mul!(u_cache, K, hr - h + 0.2randn(4))
 end
 
 cb = PeriodicCallback(affect!, Ts)
