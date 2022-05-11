@@ -31,6 +31,7 @@ Tf = 100
 t = 0:Ts:Tf
 u = [rand(2) .< 0.26 for _ in 1:length(t)]
 u_int = ConstantInterpolation(u, t)
+plot(t, reduce(hcat, u)', seriestype=:steppre)
 h0 = [1,2,3,4]
 
 prob = ODEProblem(quadtank, h0, (0, Tf), u_int)

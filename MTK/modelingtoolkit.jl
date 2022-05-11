@@ -1,6 +1,8 @@
 using Pkg
 Pkg.activate(@__DIR__())
-##
+
+
+## Part 1, low level developer perspective =====================================
 using ModelingToolkit, OrdinaryDiffEq, Plots
 @parameters t
 Dₜ = Differential(t)
@@ -53,13 +55,13 @@ c = 10   # Damping coefficient
 @named mass2 = Mass(; m = m2)
 @named sd = SpringDamper(; k, c)
 
-function Model(u, d = 0)
+function Model(u)
     eqs = [
         connect_sd(sd, mass1, mass2)
         Dₜ(mass1.vel) ~ (sd_force(sd) + u) / mass1.m
-        Dₜ(mass2.vel) ~ (-sd_force(sd) + d) / mass2.m
+        Dₜ(mass2.vel) ~ (-sd_force(sd)) / mass2.m
     ]
-    @named _model = ODESystem(eqs, t; observed = [y ~ mass2.pos])
+    @named _model = ODESystem(eqs, t; observed = [y ~ mass1.pos])
     @named model = compose(_model, mass1, mass2, sd)
 end
 
@@ -100,8 +102,7 @@ plot(
 
 
 
-
-## Using the standard library ==================================================
+## Part 2: Using the standard library ==========================================
 using ModelingToolkitStandardLibrary.Mechanical.Rotational
 using ModelingToolkitStandardLibrary.Blocks: Sine
 
@@ -138,8 +139,6 @@ plot(sol)
 using ModelingToolkitStandardLibrary.Blocks: LimPID, FirstOrder, Step
 using ModelingToolkitStandardLibrary.Mechanical.Rotational: AngleSensor
 
-
-
 # @variables u(t) = 0 [input = true]
 @named r = Step(start_time=1)
 model = StdlibModel()
@@ -165,3 +164,27 @@ plot(
     legend = :bottomright,
 )
 
+
+
+## Variables with metadata
+
+@parameters t
+Dₜ = Differential(t)
+@variables x(t)=0 u(t)=0 [input=true] y(t)=0 [output=true]
+@parameters T [tunable = true, bounds = (0, Inf)]
+@parameters k [tunable = true, bounds = (0, Inf)]
+eqs = [
+    Dₜ(x) ~ (-x + k*u) / T # A first-order system with time constant T and gain k
+    y ~ x
+]
+sys = ODESystem(eqs, t, name=:tunable_first_order)
+
+p = tunable_parameters(sys) 
+lb, ub = getbounds(p)
+b = getbounds(sys)
+
+# How can this be used for model validation?
+
+if !states_within_bounds(sol, get_bounds(sys))
+    error("")
+end
